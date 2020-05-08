@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Matter from 'matter-js';
 import Constants from './src/utils/constants';
@@ -7,6 +7,7 @@ import Physics from './src/utils/physics';
 import Bird from './src/components/bird';
 import Wall from './src/components/wall';
 import Floor from './src/components/floor';
+import Images from './src/utils/images';
 
 const randomBetween = (min, max) => Math.floor(Math.random()*(max-min + 1) + min);
 
@@ -36,9 +37,9 @@ class App extends React.Component {
     let engine = Matter.Engine.create({enableSleeping: false});
     let world = engine.world;
     world.gravity.y = 0.0;
-    let bird = Matter.Bodies.rectangle(Constants.MAX_WIDTH/4, Constants.MAX_HEIGHT/2, 50, 50);
-    let floor1 = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT-25, Constants.MAX_WIDTH + 4, 50, {isStatic: true});
-    let floor2 = Matter.Bodies.rectangle(Constants.MAX_WIDTH+(Constants.MAX_WIDTH/2), Constants.MAX_HEIGHT-25, Constants.MAX_WIDTH + 4, 50, {isStatic: true});
+    let bird = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT/2, Constants.BIRD_WIDTH, Constants.BIRD_HEIGHT);
+    let floor1 = Matter.Bodies.rectangle(Constants.MAX_WIDTH/2, Constants.MAX_HEIGHT-45, Constants.MAX_WIDTH + 4, 50, {isStatic: true});
+    let floor2 = Matter.Bodies.rectangle(Constants.MAX_WIDTH+(Constants.MAX_WIDTH/2), Constants.MAX_HEIGHT-45, Constants.MAX_WIDTH + 4, 50, {isStatic: true});
 
     Matter.World.add(world, [bird, floor1, floor2]);
 
@@ -49,9 +50,9 @@ class App extends React.Component {
 
     return {
       physics: {engine, world},
-      bird: {body: bird, size: [50, 50], color: 'red', renderer: Bird},
       floor1: {body: floor1, renderer: Floor},
       floor2: {body: floor2, renderer: Floor},
+      bird: {body: bird, pose: 1, renderer: Bird},
     }
   }
 
@@ -69,6 +70,7 @@ class App extends React.Component {
     const {running} = this.state;
     return (
       <View style={styles.container}>
+        <Image source={Images.background} style={[styles.gameContainer, styles.backgroundImage]} resizeMode='stretch' />
         <GameEngine ref={ref => this.gameEngine = ref} style={styles.gameContainer} systems={[Physics]} running={running} entities={this.entities} onEvent={this.onEvent} />
         {!running && (
           <TouchableOpacity onPress={this.reset} style={[styles.gameContainer, styles.fullScreenButton]}>
@@ -86,6 +88,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  backgroundImage: {
+    width: Constants.MAX_WIDTH,
+    height: Constants.MAX_HEIGHT,
   },
   gameContainer: {
     position: 'absolute',

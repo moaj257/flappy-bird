@@ -1,24 +1,27 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Image} from 'react-native';
+import Images from '../utils/images';
 
 export default class Bird extends React.Component {
   render() {
-    const {size, body, color} = this.props;
-    const {position} = body;
-    const width = size[0];
-    const height = size[1];
+    const {body, pose} = this.props;
+    const {position, bounds} = body;
+    const {min, max} = bounds;
+    const width = max.x - min.x;
+    const height = max.y - min.y;
     const x = position.x - width / 2;
     const y = position.y - height / 2;
+
+    const image = Images[`bird${pose}`];
     
     return(
-      <View style={{
+      <Image style={{
         position: 'absolute',
         top: y,
         left: x,
         width,
         height,
-        backgroundColor: color
-      }} />
+      }} resizeMode='stretch' source={image} />
     )
   }
 }

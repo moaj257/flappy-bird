@@ -25,7 +25,7 @@ export default class Floor extends React.Component {
         flexDirection: 'row',
       }}>
         {Array.apply(null, Array(imageIterations)).map((el, i) => (
-          <Image style={{width, height}} key={`floor-${i}`} source={Images.floor} />
+          <Image style={{width, height}} key={`floor-${i}`} resizeMode='repeat' source={Images.floor} />
         ))}
       </View>
     )
